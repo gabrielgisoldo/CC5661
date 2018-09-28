@@ -1,3 +1,6 @@
+#Esse MergeSort inicialmente apenas recebe de um vetor local, será implementada uma versão que leia o JSON do servidor em breve
+
+
 def main():
 
 	arr = [12, 11, 13, 5, 6, 7] 
