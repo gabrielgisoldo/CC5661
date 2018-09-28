@@ -23,8 +23,8 @@ def merge(arr, e, m, d):
 	n2 = d - m #tamanho do array temporário direito
 
 	#Criação dos arrays temporários
-	arr_Temp_Esq = [0] * (round(n1))
-	arr_Temp_Dir = [0] * (round(n2))
+	arr_Temp_Esq = [0] * (n1)
+	arr_Temp_Dir = [0] * (n2)
 
 
 	#Copia as metades de arr para arrays temporários
