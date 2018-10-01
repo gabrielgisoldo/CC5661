@@ -1,22 +1,14 @@
 #Esse MergeSort inicialmente apenas trabalha em um vetor local, será implementada uma versão que leia o JSON do servidor em breve
-
+import json, requests
 
 def main():
 
-	arr = [12, 11, 13, 5, 6, 7] 
-	n = len(arr)
- 
-	print ("O vetor original ") 
-	for i in range(n): 
-    		print ("%d" %arr[i]), 
-  
-	mergeSort(arr,0,n-1) 
+	resp = json.loads(requests.get("http://localhost:5000/p1").text)
+	n = len(resp['elementos'])
 
-	print ("\n\nO vetor ordenado ") 
-	for i in range(n): 
-    		print ("%d" %arr[i])
-
-
+	mergeSort(resp['elementos'],0,n-1) 
+	print(resp)
+	
 def merge(arr, e, m, d):
 	
 	n1 = m - e + 1 #tamanho do array temporário esquerdo
