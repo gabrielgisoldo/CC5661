@@ -1,4 +1,4 @@
-#Esse MergeSort inicialmente apenas trabalha em um vetor local, será implementada uma versão que leia o JSON do servidor em breve
+#Esse MergeSort ordena um array de strings vindo de um JSON utilizando os módulos "json" e "requests" do Python
 import json, requests
 
 def main():
