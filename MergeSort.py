@@ -4,10 +4,15 @@ import json, requests
 def main():
 
 	resp = json.loads(requests.get("http://localhost:5000/p1").text) #requisição feita ao servidor em host local
-	n = len(resp['elementos']) #guarda o tamanho do array na variável n, acessando esse array através de um dicionário
 
-	mergeSort(resp['elementos'],0,n-1) 
+	"""acessa os elementos e sua quantidade através das chaves 'elementos'
+	e 'n', respectivamente, no dicionário 'resp'"""
+	
+	mergeSort(resp['elementos'], 0 ,resp['n']-1) 
+	
 	print(resp)
+	
+	return resp
 	
 def merge(arr, e, m, d):
 	
