@@ -10,9 +10,9 @@ def main():
 	
 	mergeSort(resp['elementos'], 0 ,resp['n']-1) 
 	
-	print(resp)
+	print(resp) #imprime o JSON com o array ordenado
 	
-	return resp
+	return resp #retorna para o servidor
 	
 def merge(arr, e, m, d):
 	
