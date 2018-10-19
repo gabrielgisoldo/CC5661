@@ -49,7 +49,7 @@ def merge(arr, e, m, d):
 		
 		k += 1
 
-	while i < n1:
+	while i < n1:				#preenchimento com os elementos restantes
 		arr[k] = arr_Temp_Esq[i]
 		i += 1
 		k += 1
