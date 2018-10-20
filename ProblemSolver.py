@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 def merge(arr, e, m, d):
 	
@@ -67,6 +67,9 @@ def main():
 		if resp['problema'] == 'ordenacao':
 
 			mergeSort(resp['elementos'], 0 ,resp['n']-1)
+			json_resp = json.dumps(resp) #parser para JSON
+		
+			return json_resp #retorna
 
 		elif resp['problema'] == 'multiplicacao_matrizes':
 		
@@ -75,6 +78,9 @@ def main():
 		else:
 		
 			print('Problema de grafo')
+			
+			
+		
 
 
 
