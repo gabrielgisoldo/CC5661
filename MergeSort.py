@@ -1,9 +1,9 @@
 #Esse MergeSort ordena um array de strings vindo de um JSON utilizando os módulos "json" e "requests" do Python
-import json, requests
+import requests
 
 def main():
 
-	resp = json.loads(requests.get("http://localhost:5000/p1").text) #requisição feita ao servidor em host local
+	resp = requests.get("http://localhost:5000/p1").json() #requisição feita ao servidor em host local
 
 	"""acessa os elementos e sua quantidade através das chaves 'elementos'
 	e 'n', respectivamente, no dicionário 'resp'"""
