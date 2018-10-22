@@ -174,7 +174,7 @@ def multiplicar_matrizes(matrizes):
     if mo is not None:
         out = []
         array_ordem_mult(1, len(mo) - 1, mo, out)
-        mo = filter(lambda x: x is not None, out)
+        mo = list(filter(lambda x: x is not None, out))
     else:
         mo = [0, 1]
 
@@ -186,27 +186,35 @@ def multiplicar_matrizes(matrizes):
 def main():
 
     while(True):
-
-        resp = requests.get('http://localhost:5000/').json()
+        #servidor = 'http://10.103.5.104:5000/'
+        servidor = 'http://127.0.0.1:5000/'
+        resp = requests.get(servidor + '?id_grupo=1').json()
+        ret = {'uuid': resp['uuid']}
 
         if resp['problema']['tipo'] == 'ordenacao':
 
             mergeSort(
                 resp['problema']['elementos'], 0, resp['problema']['n'] - 1)
-            json_resp = json.dumps(resp)  # parser para JSON
+            ret['solucao'] = resp['problema']['elementos']
 
-            requests.post('http://localhost:5000/solucao',
-                          data=json_resp)  # retorna
+            resp_serv = requests.post(
+                servidor + 'solucao', data=json.dumps(ret))
+            print(ret)
+            print(resp_serv.json())
 
         elif resp['problema']['tipo'] == 'multiplicacao_matrizes':
-            resp['problema']['solucao'] = multiplicar_matrizes(
+            ret['solucao'] = multiplicar_matrizes(
                 resp['problema']['matrizes'])
 
-            requests.post('http://localhost:5000/solucao',
-                          data=json.dumps(resp))
+            resp_serv = requests.post(
+                servidor + 'solucao', data=json.dumps(ret))
+            print(ret)
+            print(resp_serv.json())
 
         else:
-
+            ret['solucao'] = []
+            resp_serv = requests.post(
+                servidor + 'solucao', data=json.dumps(ret))
             print('Problema de grafo')
 
 
