@@ -1,7 +1,7 @@
 import requests
 import json
 
-#============================================================================================================
+#=========================================================================
 
 
 def merge(arr, e, m, d):
@@ -54,14 +54,14 @@ def mergeSort(arr, e, d):
     if e < d:
 
         # o operador // faz com que a divisao resulte em um numero inteiro
-        m = (e + (d-1)) // 2
+        m = (e + (d - 1)) // 2
 
         mergeSort(arr, e, m)
-        mergeSort(arr, m+1, d)
+        mergeSort(arr, m + 1, d)
         merge(arr, e, m, d)
 
 
-#=========================================================================================================================
+#=========================================================================
 
 def melhor_ordem(lista_matrizes):
     """Calcula a matriz com melhor forma de multiplicar."""
@@ -85,10 +85,11 @@ def melhor_ordem(lista_matrizes):
 
         # Calcula a matriz saida
         for d in range(1, n_dim):
-            for i in range(1, n_dim-d):
+            for i in range(1, n_dim - d):
                 j = i + d
                 for k in range(i, j):
-                    q = matriz_temp[i][k] + matriz_temp[k+1][j] + dim[i-1]*dim[k]*dim[j]
+                    q = matriz_temp[i][k] + matriz_temp[k + 1][j] +\
+                        dim[i - 1] * dim[k] * dim[j]
                     if matriz_temp[i][j] == 0 or q < matriz_temp[i][j]:
                         matriz_temp[i][j] = q
                         matriz_saida[i][j] = k
@@ -103,7 +104,7 @@ def array_ordem_mult(i, j, mo, saida):
     das matrizes na ordem que serao multiplicadas.
     """
     if i == j:
-        return i-1
+        return i - 1
     else:
         s1 = array_ordem_mult(mo[i][j] + 1, j, mo, saida)
         s2 = array_ordem_mult(i, mo[i][j], mo, saida)
@@ -135,10 +136,30 @@ def prodMatriz(matrizA, matrizB):
 
 def executarOrdem(ordem, matrizes):
     """Executa a multiplicacao na ordem calculada."""
-    resultante = prodMatriz(matrizes[ordem[0]], matrizes[ordem[1]])
+    if ordem[0] < ordem[1] and\
+            matrizes[ordem[0]]['colunas'] == matrizes[ordem[1]]['linhas']:
+        resultante = prodMatriz(matrizes[ordem[0]], matrizes[ordem[1]])
+    else:
+        resultante = prodMatriz(matrizes[ordem[1]], matrizes[ordem[0]])
 
     for index in range(2, len(ordem)):
-        if len(resultante[0]) == matrizes[ordem[index]]['linhas']:
+        if len(resultante[0]) == matrizes[ordem[index]]['linhas'] and\
+                len(resultante) == matrizes[ordem[index]]['colunas']:
+            r1 = (len(resultante), matrizes[ordem[index]]['colunas'])
+            r2 = (matrizes[ordem[index]]['linhas'], len(resultante[0]))
+
+            if index + 1 == len(ordem):
+                aux = index
+            else:
+                aux = index + 1
+
+            if r1[1] in (matrizes[ordem[aux]]['linhas'],
+                         matrizes[ordem[aux]]['colunas']):
+                resultante = prodMatriz(resultante, matrizes[ordem[index]])
+            else:
+                resultante = prodMatriz(matrizes[ordem[index]], resultante)
+
+        elif len(resultante[0]) == matrizes[ordem[index]]['linhas']:
             resultante = prodMatriz(resultante, matrizes[ordem[index]])
         else:
             resultante = prodMatriz(matrizes[ordem[index]], resultante)
@@ -148,24 +169,19 @@ def executarOrdem(ordem, matrizes):
 
 def multiplicar_matrizes(matrizes):
     """Inicia a multiplicacao das matrizes."""
-    print matrizes
     mo = melhor_ordem(matrizes)
 
     if mo is not None:
         out = []
-        array_ordem_mult(1, len(mo)-1, mo, out)
+        array_ordem_mult(1, len(mo) - 1, mo, out)
         mo = filter(lambda x: x is not None, out)
-        if mo[0] > mo[1]:
-            aux = mo[1]
-            mo[1] = mo[0]
-            mo[0] = aux
     else:
         mo = [0, 1]
 
     return executarOrdem(mo, matrizes)
 
 
-#=========================================================================================================================
+#=========================================================================
 
 def main():
 
@@ -175,19 +191,17 @@ def main():
 
         if resp['problema']['tipo'] == 'ordenacao':
 
-            mergeSort(resp['problema']['elementos'],
-                      0, resp['problema']['n']-1)
+            mergeSort(
+                resp['problema']['elementos'], 0, resp['problema']['n'] - 1)
             json_resp = json.dumps(resp)  # parser para JSON
 
             requests.post('http://localhost:5000/solucao',
                           data=json_resp)  # retorna
 
         elif resp['problema']['tipo'] == 'multiplicacao_matrizes':
-            try:
-                resp['problema']['solucao'] = multiplicar_matrizes(
-                    resp['problema']['matrizes'])
-            except IndexError:
-                resp['problema']['solucao'] = []
+            resp['problema']['solucao'] = multiplicar_matrizes(
+                resp['problema']['matrizes'])
+
             requests.post('http://localhost:5000/solucao',
                           data=json.dumps(resp))
 
@@ -196,6 +210,6 @@ def main():
             print('Problema de grafo')
 
 
-#=============================================================================================
+#=========================================================================
 
 main()
