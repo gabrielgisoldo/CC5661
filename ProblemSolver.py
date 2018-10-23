@@ -1,5 +1,6 @@
 import requests
 import json
+from time import sleep
 
 #=========================================================================
 
@@ -186,8 +187,9 @@ def multiplicar_matrizes(matrizes):
 def main():
 
     while(True):
-        #servidor = 'http://10.103.5.104:5000/'
-        servidor = 'http://127.0.0.1:5000/'
+        sleep(1)
+        servidor = 'http://10.103.5.104:5000/'
+        #servidor = 'http://127.0.0.1:5000/'
         resp = requests.get(servidor + '?id_grupo=1').json()
         ret = {'uuid': resp['uuid']}
 
@@ -199,8 +201,6 @@ def main():
 
             resp_serv = requests.post(
                 servidor + 'solucao', data=json.dumps(ret))
-            print(ret)
-            print(resp_serv.json())
 
         elif resp['problema']['tipo'] == 'multiplicacao_matrizes':
             ret['solucao'] = multiplicar_matrizes(
@@ -208,14 +208,10 @@ def main():
 
             resp_serv = requests.post(
                 servidor + 'solucao', data=json.dumps(ret))
-            print(ret)
-            print(resp_serv.json())
-
         else:
             ret['solucao'] = []
             resp_serv = requests.post(
                 servidor + 'solucao', data=json.dumps(ret))
-            print('Problema de grafo')
 
 
 #=========================================================================
